@@ -33,3 +33,4 @@ pythonVersion = "3.12"
 [tool.pytest.ini_options]
 addopts = "-q --cov=sovereign_rag --cov-report=term-missing --cov-fail-under=85"
 testpaths = ["tests"]
+pythonpath = ["src"]
