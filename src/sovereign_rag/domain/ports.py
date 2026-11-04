@@ -18,3 +18,14 @@ class Embedder(Protocol):
     dim: int
 
     def embed(self, text: str) -> list[float]: ...
+
+
+class ModelClient(Protocol):
+    """Turns a question plus numbered passages into text that cites passages as ``[n]``.
+
+    ``passages[0]`` is ``[1]``. Implementations may be extractive, scripted or an LLM; the
+    application validates every citation, so an implementation cannot smuggle in unsupported
+    claims.
+    """
+
+    def answer(self, question: str, passages: Sequence[Chunk]) -> str: ...

@@ -28,7 +28,7 @@ def chunk_document(doc: Document, max_chars: int = 600) -> list[Chunk]:
             cut = cut if cut > 0 else max_chars
             pieces.append(para[:cut].strip())
             para = para[cut:].strip()
-        buf = f"{buf} {para}".strip() if buf else para
+        buf = f"{buf}\n{para}" if buf else para
     if buf:
         pieces.append(buf)
     return [

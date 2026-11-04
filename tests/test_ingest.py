@@ -16,9 +16,18 @@ def test_parse_boe_keeps_metadata() -> None:
     assert any("Subalterno" in p for p in doc.paragraphs)
 
 
+def test_parse_boe_normalises_non_breaking_spaces() -> None:
+    xml = (
+        "<documento><metadatos><identificador>X</identificador><titulo>Ley\u00a05</titulo>"
+        "</metadatos><texto><p>a\u00a0b</p></texto></documento>"
+    )
+    doc = parse_boe(xml.encode())
+    assert doc.title == "Ley 5" and doc.paragraphs == ("a b",)
+
+
 def test_ingest_fixtures_yields_cited_chunks() -> None:
     chunks, issues = ingest_files(BOE.glob("*.xml"), parse_boe)
-    assert not issues and len({c.doc_id for c in chunks}) == 14
+    assert not issues and len({c.doc_id for c in chunks}) == 11
     assert all(c.url.startswith("https://www.boe.es/") and c.title for c in chunks)
     assert len({c.id for c in chunks}) == len(chunks)
 
@@ -32,6 +41,11 @@ def test_unparsable_file_is_reported_and_skipped(tmp_path: Path) -> None:
     chunks, issues = ingest_files([bad, nometa, good, tmp_path / "missing.xml"], parse_boe)
     assert {i.ref for i in issues} == {"bad.xml", "nometa.xml", "missing.xml"}
     assert chunks
+
+
+def test_paragraphs_in_a_chunk_stay_separated_by_newlines() -> None:
+    doc = Document("d", "t", "dep", None, "u", ("uno sin punto", "dos"))
+    assert chunk_document(doc)[0].text == "uno sin punto\ndos"
 
 
 def test_chunking_respects_size_and_splits_long_paragraphs() -> None:

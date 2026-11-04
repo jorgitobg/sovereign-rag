@@ -20,10 +20,18 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: pyright
-      - run: pytest
-      - name: Secret scan (full history)
+      - name: Tests (coverage gate in pyproject, >= 85%)
+        run: pytest
+      - name: Offline demo and eval (no keys, no network needed)
+        run: |
+          python -m sovereign_rag.demo
+          python -m sovereign_rag.eval
+      - name: Secret scan (full history, gitleaks pinned with checksum)
         env:
           GITLEAKS_VERSION: "8.30.1"
+          GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
         run: |
-          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar -xz gitleaks
+          curl -sSfL -o gitleaks.tgz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tgz" | sha256sum -c -
+          tar -xzf gitleaks.tgz gitleaks
           ./gitleaks detect --source . --redact --no-banner --exit-code 1

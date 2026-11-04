@@ -10,9 +10,13 @@ from sovereign_rag.domain.models import Document
 URL = "https://www.boe.es/diario_boe/xml.php?id={id}"
 
 
+def _clean(text: str) -> str:
+    return text.replace("\u00a0", " ").strip()
+
+
 def _text(root: ET.Element, path: str) -> str:
     el = root.find(path)
-    return "".join(el.itertext()).strip() if el is not None else ""
+    return _clean("".join(el.itertext())) if el is not None else ""
 
 
 def parse_boe(payload: bytes) -> Document:
@@ -29,8 +33,8 @@ def parse_boe(payload: bytes) -> Document:
         published = date(int(raw_date[:4]), int(raw_date[4:6]), int(raw_date[6:8]))
     except ValueError:
         published = None
-    paragraphs = tuple(t for p in root.findall("texto/p") if (t := "".join(p.itertext()).strip()))
-    notes = tuple(t for n in root.findall("analisis/notas/nota") if (t := (n.text or "").strip()))
+    paragraphs = tuple(t for p in root.findall("texto/p") if (t := _clean("".join(p.itertext()))))
+    notes = tuple(t for n in root.findall("analisis/notas/nota") if (t := _clean(n.text or "")))
     return Document(
         id=doc_id,
         title=title,

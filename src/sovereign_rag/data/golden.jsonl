@@ -1,0 +1,40 @@
+{"id": "p01", "question": "¿Cuántas plazas de Subalterno convoca el Ayuntamiento de Torrox?", "gold_docs": ["BOE-A-2026-23041"], "expect": "8 plazas"}
+{"id": "p02", "question": "¿Qué plaza se convoca en el Ayuntamiento de Almoradí?", "gold_docs": ["BOE-A-2026-23037"], "expect": "Psicólogo"}
+{"id": "p03", "question": "¿Cuántas plazas de Agente de la policía local convoca Borriana por el turno libre?", "gold_docs": ["BOE-A-2026-23049"], "expect": "9 plazas"}
+{"id": "p04", "question": "¿Cuál es el plazo de presentación de solicitudes en la convocatoria de Borriana?", "gold_docs": ["BOE-A-2026-23049"], "expect": "diez días hábiles"}
+{"id": "p05", "question": "¿Qué plazo de solicitudes tiene la convocatoria del Ayuntamiento de Puigcerdà?", "gold_docs": ["BOE-A-2026-23053"], "expect": "veinte días hábiles"}
+{"id": "p06", "question": "¿Cuántas plazas de personal administrativo convoca Puigcerdà?", "gold_docs": ["BOE-A-2026-23053"], "expect": "5 plazas"}
+{"id": "p07", "question": "¿Qué plazas convoca el Instituto Municipal de Servicios Sociales de Tarragona?", "gold_docs": ["BOE-A-2026-23045"], "expect": "Administrativo"}
+{"id": "p08", "question": "¿Qué plaza se convoca en el Consejo Insular de Formentera?", "gold_docs": ["BOE-A-2026-23057"], "expect": "Técnico/a de Cultura"}
+{"id": "p09", "question": "¿Qué plaza convoca la Universidad de A Coruña?", "gold_docs": ["BOE-A-2026-23061"], "expect": "Prevención de Riesgos Laborales"}
+{"id": "p10", "question": "¿En qué diario oficial se publicaron las bases de la Universidad de A Coruña?", "gold_docs": ["BOE-A-2026-23061"], "expect": "Diario Oficial de Galicia"}
+{"id": "p11", "question": "¿Cuál es el plazo de presentación de solicitudes en la Universidad de A Coruña?", "gold_docs": ["BOE-A-2026-23061"], "expect": "veinte días naturales"}
+{"id": "p12", "question": "¿Qué puesto se provee por libre designación en la Diputación de Lleida?", "gold_docs": ["BOE-A-2026-23033"], "expect": "Intervención"}
+{"id": "p13", "question": "¿Cuál es el complemento específico anual del puesto de la Diputación de Lleida?", "gold_docs": ["BOE-A-2026-23033"], "expect": "79.388,68 euros"}
+{"id": "p14", "question": "¿Qué nivel de catalán se exige para el puesto de la Diputación de Lleida?", "gold_docs": ["BOE-A-2026-23033"], "expect": "C1"}
+{"id": "p15", "question": "¿Qué recurso cabe contra la resolución de libre designación de la Dirección General de la Función Pública?", "gold_docs": ["BOE-A-2026-23033"], "expect": "recurso de reposición"}
+{"id": "p16", "question": "¿Qué apartado de las normas de reparto de la Sala de lo Contencioso-Administrativo de la Audiencia Nacional se sustituye?", "gold_docs": ["BOE-A-2026-23065"], "expect": "2.6"}
+{"id": "p17", "question": "¿Cómo se reparten los recursos de asilo y apátrida entre las secciones de la Audiencia Nacional?", "gold_docs": ["BOE-A-2026-23065"], "expect": "meses consecutivos"}
+{"id": "p18", "question": "¿Quién puede fijar una distribución distinta de los recursos de protección internacional en la Audiencia Nacional?", "gold_docs": ["BOE-A-2026-23065"], "expect": "Presidente de la Sala"}
+{"id": "p19", "question": "¿Qué acuerdo adoptó la Comisión Bilateral de Cooperación entre la Administración General del Estado y la Comunidad de Madrid?", "gold_docs": ["BOE-A-2026-23085"], "expect": "negociaciones"}
+{"id": "p20", "question": "¿A qué ley de la Comunidad de Madrid se refiere el acuerdo de la Comisión Bilateral?", "gold_docs": ["BOE-A-2026-23085"], "expect": "Ley 5/2026"}
+{"id": "p21", "question": "¿Ante qué tribunal se interpuso el recurso contencioso-administrativo 2067/2026?", "gold_docs": ["BOE-A-2026-23097"], "expect": "Tribunal Superior de Justicia de Madrid"}
+{"id": "p22", "question": "¿Cuántos días tienen los interesados para personarse en el recurso 2067/2026?", "gold_docs": ["BOE-A-2026-23097"], "expect": "nueve días"}
+{"id": "p23", "question": "¿Quién interpuso el recurso contencioso-administrativo 2067/2026?", "gold_docs": ["BOE-A-2026-23097"], "expect": "Cosital"}
+{"id": "p24", "question": "¿En qué boletín provincial se publicaron las bases de la convocatoria de Torrox?", "gold_docs": ["BOE-A-2026-23041"], "expect": "Boletín Oficial de la Provincia de Málaga"}
+{"id": "p25", "question": "¿Qué sistema selectivo se aplica a las plazas de Subalterno de Torrox?", "gold_docs": ["BOE-A-2026-23041"], "expect": "concurso-oposición"}
+{"id": "p26", "question": "¿Cuántas plazas de policía local se convocan por movilidad en Borriana?", "gold_docs": ["BOE-A-2026-23049"], "expect": "Cinco plazas"}
+{"id": "n01", "question": "¿Cuál es la capital de Francia?", "gold_docs": [], "expect": ""}
+{"id": "n02", "question": "¿Cuánto cuesta una hipoteca en Sevilla?", "gold_docs": [], "expect": ""}
+{"id": "n03", "question": "¿Cuántas plazas de bombero convoca el Ayuntamiento de Sevilla?", "gold_docs": [], "expect": ""}
+{"id": "n04", "question": "¿Cuál es el salario mínimo interprofesional en 2027?", "gold_docs": [], "expect": ""}
+{"id": "n05", "question": "¿Cuándo se celebran las próximas elecciones generales?", "gold_docs": [], "expect": ""}
+{"id": "n06", "question": "¿Cómo se solicita una beca universitaria del Ministerio de Educación?", "gold_docs": [], "expect": ""}
+{"id": "n07", "question": "¿Qué plazo tiene la Agencia Tributaria para devolver el IRPF?", "gold_docs": [], "expect": ""}
+{"id": "n08", "question": "¿Cuántas plazas de médico convoca el Servicio Andaluz de Salud?", "gold_docs": [], "expect": ""}
+{"id": "n09", "question": "¿Qué pena establece el Código Penal para el robo con violencia?", "gold_docs": [], "expect": ""}
+{"id": "n10", "question": "¿Cuál es el horario de apertura de la Diputación de Lleida?", "gold_docs": [], "expect": ""}
+{"id": "n11", "question": "¿Cuántos magistrados componen el Tribunal Supremo?", "gold_docs": [], "expect": ""}
+{"id": "n12", "question": "¿Cuál es el precio de la gasolina hoy?", "gold_docs": [], "expect": ""}
+{"id": "n13", "question": "¿Qué plazas de subalterno convoca el Ayuntamiento de Valencia?", "gold_docs": [], "expect": ""}
+{"id": "n14", "question": "¿Cuántas secciones tiene la Sala de lo Penal de la Audiencia Nacional?", "gold_docs": [], "expect": ""}

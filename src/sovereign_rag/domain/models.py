@@ -39,3 +39,25 @@ class Hit:
 class IngestIssue:
     ref: str
     reason: str
+
+
+@dataclass(frozen=True, slots=True)
+class Citation:
+    """Pointer from one claim of an answer to the passage that supports it."""
+
+    chunk_id: str
+    doc_id: str
+    title: str
+    url: str
+    claim: str
+    quote: str
+
+
+@dataclass(frozen=True, slots=True)
+class Answer:
+    """Either a cited answer, or an abstention with a machine-readable reason."""
+
+    text: str
+    citations: tuple[Citation, ...]
+    abstained: bool
+    reason: str = ""
