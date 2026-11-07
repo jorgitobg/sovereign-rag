@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 
 from sovereign_rag.adapters.fts5 import fold, query_terms
+from sovereign_rag.application.synonyms import canonical
 from sovereign_rag.domain.models import Answer, Chunk, Citation
 from sovereign_rag.domain.ports import ModelClient, Retriever
 
@@ -28,13 +29,13 @@ _MARKER = re.compile(r"\[(\d+)\]")
 
 
 def stems(text: str) -> set[str]:
-    """Crude Spanish normalisation: drop plural -s and keep a 6-letter prefix."""
+    """Crude Spanish normalisation: drop plural -s, map listed synonyms, keep a 6-letter prefix."""
     out: set[str] = set()
     for t in query_terms(text):
         if t in _QUESTION_WORDS:
             continue
         t = t[:-1] if len(t) > 3 and t.endswith("s") else t
-        out.add(t[:6])
+        out.add(canonical(t)[:6])
     return out
 
 

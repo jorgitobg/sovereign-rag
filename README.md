@@ -74,6 +74,26 @@ How to read it:
 - **citation validity**: every emitted citation resolves to an indexed chunk with a verbatim quote and the right URL. This is true by construction of the validator, so 100% is expected, not an accomplishment.
 - **abstention (out-of-corpus)**: 14/14 on these questions. The abstention rule (75% of question content terms plus every capitalised name must be in a retrieved passage) was adjusted while looking at this same dataset, so treat it as tuned on it, not as a held-out measurement.
 
+### Synonyms: a failure found by a live run, and the measured fix
+
+A live agent asked this system "¿Cuántos puestos de subalterno ofrece el Ayuntamiento de Torrox?" and got an abstention, because the notice says *plazas*, not *puestos*. `src/sovereign_rag/application/synonyms.py` now holds a small, explicit table (plaza/puesto/vacante, solicitud/instancia, personarse/comparecer, plazo/tiempo) used both to widen the FTS query and to compare stems. Words outside the table match literally, as before.
+
+To measure it without touching the original set, 18 new paraphrased questions were written (`golden_paraphrase.jsonl`: 12 answerable, 6 out-of-corpus). Same corpus, same code except the table:
+
+```text
+                                  before    after
+answered (answerable)             4/12      12/12
+answer contains expected text     3/12      10/12
+all citations point to gold doc   4/12      12/12
+abstention (out-of-corpus)        5/6       5/6
+original 40-question set          unchanged (identical output)
+```
+
+What is still wrong, kept visible on purpose:
+- `s08`, `s09`: the right document is retrieved and cited, but the extractive model quotes a boilerplate sentence instead of the position name. The original set fails the same way on the same documents (p08, p09).
+- `t05`: *"¿Cuánto cobra un Subalterno en el Ayuntamiento de Torrox?"* gets a confident answer about 8 posts instead of an abstention. It failed identically before the table existed. The document has no salary; term coverage is too forgiving for a question that is about a different fact.
+- The paraphrase set was written after seeing the failure, by the same author as the table, so it is not an independent measurement. Treat the jump as evidence the mechanism works, not as an accuracy figure.
+
 ## How answers are validated
 
 1. Retrieve top-5 chunks with FTS5; keep only passages that cover the question's content terms.
@@ -83,7 +103,7 @@ How to read it:
 ## Limitations
 
 - Tiny corpus (11 documents from one BOE issue, 2026-11-03); the evaluation is small and partly tuned on its own questions.
-- Lexical retrieval only; no stemming beyond a crude prefix match, no synonyms, no embeddings in use.
+- Lexical retrieval only; no stemming beyond a crude prefix match, a four-group hand-written synonym table (see below), no embeddings in use.
 - The extractive model quotes sentences; it does not answer in its own words and can return a sentence that is on topic but does not contain the specific fact asked for.
 - Support checking is word overlap, so it catches fabricated or misattributed citations but not subtle meaning errors. Citations prove *where* text came from, not that the answer is right.
 - Not legal advice. BOE texts are reused under the BOE reuse licence; see `tests/fixtures/boe/SOURCES.md`.

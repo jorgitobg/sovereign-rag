@@ -26,6 +26,7 @@ jobs:
         run: |
           python -m sovereign_rag.demo
           python -m sovereign_rag.eval
+          python -m sovereign_rag.eval --golden src/sovereign_rag/data/golden_paraphrase.jsonl
       - name: Secret scan (full history, gitleaks pinned with checksum)
         env:
           GITLEAKS_VERSION: "8.30.1"

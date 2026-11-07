@@ -24,6 +24,10 @@ def default_golden_path() -> Path:
     return _PKG_DATA / "golden.jsonl"
 
 
+def default_paraphrase_golden_path() -> Path:
+    return _PKG_DATA / "golden_paraphrase.jsonl"
+
+
 def build_retriever(corpus: Path) -> tuple[SqliteFtsRetriever, list[IngestIssue]]:
     """Index every ``*.xml`` in ``corpus`` in memory. Raises FileNotFoundError if it is missing."""
     if not corpus.is_dir():
