@@ -8,6 +8,7 @@ import unicodedata
 from collections.abc import Sequence
 from datetime import date
 
+from sovereign_rag.application.synonyms import alternatives
 from sovereign_rag.domain.models import Chunk, Hit
 
 _STOP = frozenset(
@@ -86,7 +87,10 @@ class SqliteFtsRetriever:
         terms = query_terms(query)
         if not terms:
             return []
-        match = " OR ".join(f'"{t}"' for t in terms)
+        expanded = dict.fromkeys(
+            [*terms, *(a for t in terms for a in alternatives(t.removesuffix("s")))]
+        )
+        match = " OR ".join(f'"{t}"' for t in expanded)
         rows = self._db.execute(
             "SELECT id, doc_id, raw_title, department, published, url, raw, bm25(chunks, 1.0, 2.0) "
             "FROM chunks WHERE chunks MATCH ? ORDER BY bm25(chunks, 1.0, 2.0) LIMIT ?",

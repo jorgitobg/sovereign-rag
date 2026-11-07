@@ -1,0 +1,18 @@
+{"id": "s01", "question": "¿Cuántos puestos de Subalterno ofrece el Ayuntamiento de Torrox?", "gold_docs": ["BOE-A-2026-23041"], "expect": "8 plazas"}
+{"id": "s02", "question": "¿Cuántas vacantes de Subalterno hay en el Ayuntamiento de Torrox?", "gold_docs": ["BOE-A-2026-23041"], "expect": "8 plazas"}
+{"id": "s03", "question": "¿Cuántos puestos de Agente de la policía local ofrece Borriana por el turno libre?", "gold_docs": ["BOE-A-2026-23049"], "expect": "9 plazas"}
+{"id": "s04", "question": "¿Cuántos días hay para presentar la instancia en la convocatoria de Borriana?", "gold_docs": ["BOE-A-2026-23049"], "expect": "diez días hábiles"}
+{"id": "s05", "question": "¿Cuántos puestos de personal administrativo ofrece Puigcerdà?", "gold_docs": ["BOE-A-2026-23053"], "expect": "5 plazas"}
+{"id": "s06", "question": "¿Cuánto tiempo hay para presentar solicitudes en la convocatoria de Puigcerdà?", "gold_docs": ["BOE-A-2026-23053"], "expect": "veinte días hábiles"}
+{"id": "s07", "question": "¿Cuánto tiempo tienen los interesados para comparecer en el recurso 2067/2026?", "gold_docs": ["BOE-A-2026-23097"], "expect": "nueve días"}
+{"id": "s08", "question": "¿Qué puesto convoca la Universidad de A Coruña?", "gold_docs": ["BOE-A-2026-23061"], "expect": "Prevención de Riesgos Laborales"}
+{"id": "s09", "question": "¿Qué vacante se ofrece en el Consejo Insular de Formentera?", "gold_docs": ["BOE-A-2026-23057"], "expect": "Técnico/a de Cultura"}
+{"id": "s10", "question": "¿Qué recurso se puede interponer contra la libre designación de la Dirección General de la Función Pública?", "gold_docs": ["BOE-A-2026-23033"], "expect": "recurso de reposición"}
+{"id": "s11", "question": "¿Qué tribunal conoce el recurso contencioso-administrativo 2067/2026?", "gold_docs": ["BOE-A-2026-23097"], "expect": "Tribunal Superior de Justicia de Madrid"}
+{"id": "s12", "question": "¿Cuántos puestos de policía local se ofrecen por movilidad en Borriana?", "gold_docs": ["BOE-A-2026-23049"], "expect": "Cinco plazas"}
+{"id": "t01", "question": "¿Cuántos puestos de bombero ofrece el Ayuntamiento de Sevilla?", "gold_docs": [], "expect": ""}
+{"id": "t02", "question": "¿Cuántas vacantes de médico hay en el Servicio Andaluz de Salud?", "gold_docs": [], "expect": ""}
+{"id": "t03", "question": "¿Cuántos puestos de Subalterno ofrece el Ayuntamiento de Valencia?", "gold_docs": [], "expect": ""}
+{"id": "t04", "question": "¿Cuántos días de vacaciones tienen los empleados del Ayuntamiento de Torrox?", "gold_docs": [], "expect": ""}
+{"id": "t05", "question": "¿Cuánto cobra un Subalterno en el Ayuntamiento de Torrox?", "gold_docs": [], "expect": ""}
+{"id": "t06", "question": "¿Cuántas vacantes de policía local hay en el Ayuntamiento de Madrid?", "gold_docs": [], "expect": ""}
