@@ -90,7 +90,7 @@ original 40-question set          unchanged (identical output)
 ```
 
 What is still wrong, kept visible on purpose:
-- `s08`, `s09`: the right document is retrieved and cited, but the extractive model quotes a boilerplate sentence instead of the position name. The original set fails the same way on the same documents (p08, p09).
+- `s08`, `s09`: the right document is retrieved and cited, but the extractive model quotes a boilerplate sentence instead of the position name. The original set fails the same way on the same documents (p08, p09). A rarity-weighted scoring fix was tried and changed no metric, so it was reverted ([ADR 0004](docs/adr/0004-rarity-weighting-tried-no-effect.md)).
 - `t05`: *"¿Cuánto cobra un Subalterno en el Ayuntamiento de Torrox?"* gets a confident answer about 8 posts instead of an abstention. It failed identically before the table existed. The document has no salary; term coverage is too forgiving for a question that is about a different fact.
 - The paraphrase set was written after seeing the failure, by the same author as the table, so it is not an independent measurement. Treat the jump as evidence the mechanism works, not as an accuracy figure.
 
