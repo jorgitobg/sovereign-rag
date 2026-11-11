@@ -91,7 +91,7 @@ original 40-question set          unchanged (identical output)
 
 What is still wrong, kept visible on purpose:
 - `s08`, `s09`: the right document is retrieved and cited, but the extractive model quotes a boilerplate sentence instead of the position name. The original set fails the same way on the same documents (p08, p09). A rarity-weighted scoring fix was tried and changed no metric, so it was reverted ([ADR 0004](docs/adr/0004-rarity-weighting-tried-no-effect.md)).
-- `t05`: *"¿Cuánto cobra un Subalterno en el Ayuntamiento de Torrox?"* gets a confident answer about 8 posts instead of an abstention. It failed identically before the table existed. The document has no salary; term coverage is too forgiving for a question that is about a different fact.
+- `t05` (fixed in this change): *"¿Cuánto cobra un Subalterno en el Ayuntamiento de Torrox?"* used to get a confident answer about 8 posts instead of an abstention, because term coverage alone cannot tell a salary question from a headcount question. A finite requested-attribute evidence check now requires the cited claim to contain salary evidence when the question asks about pay; the paraphrase set now abstains on all 6 out-of-corpus cases (was 5/6) and the original 40-question set is unchanged.
 - The paraphrase set was written after seeing the failure, by the same author as the table, so it is not an independent measurement. Treat the jump as evidence the mechanism works, not as an accuracy figure.
 
 ## How answers are validated
@@ -99,6 +99,7 @@ What is still wrong, kept visible on purpose:
 1. Retrieve top-5 chunks with FTS5; keep only passages that cover the question's content terms.
 2. No such passage → "Sin evidencia en el corpus", model not called.
 3. Otherwise the `ModelClient` must return claims each followed by `[n]`. Unknown markers, uncited text, empty output or a claim not supported by its cited passage are replaced by an abstention with a reason.
+4. When the question asks for a specific fact (salary/pay, application deadline, number of posts), at least one cited claim must itself contain evidence of that fact — a salary figure or pay word, a day/period term, or a count — not merely overlap with the question (see [ADR 0005](docs/adr/0005-requested-attributes.md)); otherwise the answer is replaced by an abstention. For salary and deadline questions the passage *body* (never the title) must itself contain such evidence before the model is called at all; count questions are exempt because a body can legitimately state both a headcount and a monetary amount.
 
 ## Limitations
 
@@ -106,6 +107,7 @@ What is still wrong, kept visible on purpose:
 - Lexical retrieval only; no stemming beyond a crude prefix match, a four-group hand-written synonym table (see below), no embeddings in use.
 - The extractive model quotes sentences; it does not answer in its own words and can return a sentence that is on topic but does not contain the specific fact asked for.
 - Support checking is word overlap, so it catches fabricated or misattributed citations but not subtle meaning errors. Citations prove *where* text came from, not that the answer is right.
+- Requested-attribute checks are finite lexical guards, not entailment checks. Prefix collisions remain possible: the pay marker `comple` matches both `complemento` and non-pay `completa`; a count-only statement can therefore still pass a pay-marker check. See ADR 0005 for other retained failure modes.
 - Not legal advice. BOE texts are reused under the BOE reuse licence; see `tests/fixtures/boe/SOURCES.md`.
 
 ## Layout

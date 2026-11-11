@@ -81,6 +81,10 @@ def answer_question(
     if not passages:
         return _abstain("no_evidence")
 
+    wanted = _attribute(question)
+    if wanted and not any(_body_has_evidence(wanted, c) for c in passages):
+        return _abstain("missing_requested_attribute")  # before invoking the model
+
     text = model.answer(question, passages).strip()
     if not text:
         return _abstain("empty_output")
@@ -90,6 +94,7 @@ def answer_question(
     if _MARKER.sub("", text[markers[-1].end() :]).strip():
         return _abstain("uncited_output")  # trailing claim with no marker
     citations: list[Citation] = []
+    evidenced = not wanted
     start = 0
     for m in markers:
         n = int(m.group(1))
@@ -101,7 +106,69 @@ def answer_question(
         cs = stems(claim)
         if not cs or len(cs & passage_stems(chunk)) < MIN_CLAIM_SUPPORT * len(cs):
             return _abstain("unsupported_claim")
+        if _has_evidence(wanted, claim, cs):
+            evidenced = True
         citations.append(
             Citation(chunk.id, chunk.doc_id, chunk.title, chunk.url, claim, _quote(chunk))
         )
+    if not evidenced:
+        return _abstain("missing_requested_attribute")
     return Answer(text, tuple(citations), False)
+
+
+# --- S05: explicit requested-attribute evidence (finite, hand-written; no ontology) ---
+# Detects what fact the question asks *for* (salary / deadline / quantity of posts) and
+# requires the cited claim itself to contain evidence of that fact, not merely overlap.
+# Deliberately finite: paraphrases outside these word lists get no extra protection.
+
+# Stems here are the exact 6-character prefixes `stems()` produces for the advertised
+# words (e.g. "sueldo" -> "sueldo", not "sueld"); `tiempo` folds to canonical "plazo".
+_SALARY_INTENT = frozenset({"cobra", "sueldo", "salari", "retrib", "remune"})
+_SALARY_EVIDENCE = frozenset({"sueldo", "salari", "retrib", "remune", "comple"})
+_DEADLINE_INTENT = frozenset({"plazo"})
+_DEADLINE_EVIDENCE = frozenset({"plazo", "dia", "mes", "habil", "habile", "natura", "naturale"})
+_COUNT_NOUNS = frozenset({"plaza", "puesto", "vacant"})
+_CARDINALS = frozenset(
+    {
+        "un", "uno", "una", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
+        "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciseis",
+        "diecisiete", "dieciocho", "diecinueve", "veinte", "veintiuno", "veintidos",
+        "veintitres", "veinticuatro", "veinticinco", "treinta", "cuarenta", "cincuenta",
+        "sesenta", "setenta", "ochenta", "noventa", "cien",
+    }
+)  # fmt: skip
+_MONEY = re.compile(r"\d[\d.,]*\s*(?:euros|€)|€\s*\d[\d.,]*", re.IGNORECASE)
+
+
+def _body_has_evidence(attribute: str, chunk: Chunk) -> bool:
+    """Conservative prefilter on the passage *body* (never the title); salary/deadline only."""
+    if attribute not in ("salary", "deadline"):
+        return True
+    return _has_evidence(attribute, chunk.text, stems(chunk.text))
+
+
+def _attribute(question: str) -> str:
+    """The requested fact class, or ``""`` when no explicit rule matches."""
+    q = stems(question)
+    if q & _SALARY_INTENT:
+        return "salary"
+    if q & _DEADLINE_INTENT:
+        return "deadline"
+    if "cuant" in fold(question) and q & _COUNT_NOUNS:
+        return "quantity"
+    return ""
+
+
+def _has_evidence(attribute: str, claim: str, claim_stems: set[str]) -> bool:
+    if attribute == "salary":
+        return bool(claim_stems & _SALARY_EVIDENCE) or bool(_MONEY.search(claim))
+    if attribute == "deadline":
+        return bool(claim_stems & _DEADLINE_EVIDENCE)
+    if attribute == "quantity":
+        # Cardinal words are matched on the raw tokens so retrieval stopwords ("un",
+        # "una") cannot erase them; only digits *inside a monetary amount*
+        # (e.g. "1.200 euros") are excluded from the digit check.
+        if any(t in _CARDINALS for t in re.findall(r"\w+", fold(claim))):
+            return True
+        return any(ch.isdigit() for ch in _MONEY.sub(" ", claim))
+    return True
