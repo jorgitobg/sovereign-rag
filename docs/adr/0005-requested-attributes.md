@@ -83,6 +83,10 @@ Known retained failures (`p02, p07, p08, p09, p14, p16, p17, p18, p19, p25` orig
   a salary. The guards do not establish which entity or attribute a value belongs to.
   The salary/deadline prefilter refuses without calling the model when none of the eligible
   passage bodies contain the selected attribute's markers; it does not prove a fact exists.
+- The pay-evidence prefix `comple` is intended to match `complemento` (a pay component),
+  but also matches non-pay words such as `completa`. Such prefix collisions can make a
+  count-only statement appear to contain a pay marker. This is a known lexical false positive,
+  not a guarantee of reliable salary detection.
 - Semantic entailment is out of scope: negation, paraphrase and numeric reasoning errors are
   not caught. Citations still prove provenance, not truth.
 - The evidence check is answer-level (one evidenced claim suffices); a multi-claim answer

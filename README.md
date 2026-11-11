@@ -107,6 +107,7 @@ What is still wrong, kept visible on purpose:
 - Lexical retrieval only; no stemming beyond a crude prefix match, a four-group hand-written synonym table (see below), no embeddings in use.
 - The extractive model quotes sentences; it does not answer in its own words and can return a sentence that is on topic but does not contain the specific fact asked for.
 - Support checking is word overlap, so it catches fabricated or misattributed citations but not subtle meaning errors. Citations prove *where* text came from, not that the answer is right.
+- Requested-attribute checks are finite lexical guards, not entailment checks. Prefix collisions remain possible: the pay marker `comple` matches both `complemento` and non-pay `completa`; a count-only statement can therefore still pass a pay-marker check. See ADR 0005 for other retained failure modes.
 - Not legal advice. BOE texts are reused under the BOE reuse licence; see `tests/fixtures/boe/SOURCES.md`.
 
 ## Layout
