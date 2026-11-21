@@ -1,6 +1,6 @@
 [project]
 name = "sovereign-rag"
-version = "0.0.1"
+version = "0.1.0"
 description = "Offline-first RAG over small public Spanish/EU corpora with mandatory citations and an honest 'I don't know'."
 readme = "README.md"
 license = "Apache-2.0"
