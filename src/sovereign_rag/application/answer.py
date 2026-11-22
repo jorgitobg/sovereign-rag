@@ -124,7 +124,10 @@ def answer_question(
 # Stems here are the exact 6-character prefixes `stems()` produces for the advertised
 # words (e.g. "sueldo" -> "sueldo", not "sueld"); `tiempo` folds to canonical "plazo".
 _SALARY_INTENT = frozenset({"cobra", "sueldo", "salari", "retrib", "remune"})
-_SALARY_EVIDENCE = frozenset({"sueldo", "salari", "retrib", "remune", "comple"})
+_SALARY_EVIDENCE = frozenset({"sueldo", "salari", "retrib", "remune"})
+# `complemento` is pay evidence but its 6-letter prefix `comple` also matches `completa`,
+# `completo`, `complementaria`...; match the whole word on the folded text instead.
+_PAY_COMPONENT = re.compile(r"\bcomplementos?\b")
 _DEADLINE_INTENT = frozenset({"plazo"})
 _DEADLINE_EVIDENCE = frozenset({"plazo", "dia", "mes", "habil", "habile", "natura", "naturale"})
 _COUNT_NOUNS = frozenset({"plaza", "puesto", "vacant"})
@@ -161,7 +164,11 @@ def _attribute(question: str) -> str:
 
 def _has_evidence(attribute: str, claim: str, claim_stems: set[str]) -> bool:
     if attribute == "salary":
-        return bool(claim_stems & _SALARY_EVIDENCE) or bool(_MONEY.search(claim))
+        return (
+            bool(claim_stems & _SALARY_EVIDENCE)
+            or bool(_PAY_COMPONENT.search(fold(claim)))
+            or bool(_MONEY.search(claim))
+        )
     if attribute == "deadline":
         return bool(claim_stems & _DEADLINE_EVIDENCE)
     if attribute == "quantity":

@@ -355,3 +355,48 @@ def test_uppercase_euros_amount_is_not_a_headcount() -> None:
         ScriptedModel("El sueldo base del puesto es de 1200 EUROS mensuales. [1]"),
     )
     assert ans.abstained and ans.reason == "missing_requested_attribute"
+
+
+# --- RG04: pay marker `comple` must not match non-pay words such as `completa` ---
+
+COMPLETE_COUNT_PASSAGE = chunk(
+    5,
+    "Ayuntamiento de Torrox",
+    "Ocho plazas de Subalterno/a, jornada completa, por concurso-oposición.",
+)
+
+
+def test_salary_question_citing_a_count_sentence_with_completa_abstains() -> None:
+    """`completa` shares the 6-letter prefix `comple` with `complemento` but is not pay."""
+    ans = answer_question(
+        SALARY_Q,
+        FakeRetriever([COMPLETE_COUNT_PASSAGE]),
+        ScriptedModel("Ocho plazas de Subalterno/a, jornada completa, por concurso-oposición. [1]"),
+    )
+    assert ans.abstained and ans.reason == "missing_requested_attribute"
+
+
+def test_salary_question_with_complemento_is_still_answered() -> None:
+    passage = chunk(
+        6,
+        "Ayuntamiento de Torrox",
+        "Ocho plazas de Subalterno/a. Se abona un complemento de destino por el puesto.",
+    )
+    ans = answer_question(
+        SALARY_Q,
+        FakeRetriever([passage]),
+        ScriptedModel("Se abona un complemento de destino por el puesto. [1]"),
+    )
+    assert not ans.abstained and ans.reason == ""
+
+
+def test_complementos_plural_counts_as_pay_evidence() -> None:
+    from sovereign_rag.application.answer import (  # pyright: ignore[reportPrivateUsage]
+        _has_evidence,
+        stems,
+    )
+
+    claim = "Los complementos retributivos se fijan por convenio."
+    assert _has_evidence("salary", claim, stems(claim))
+    non_pay = "Formación complementaria y jornada completa."
+    assert not _has_evidence("salary", non_pay, stems(non_pay))
