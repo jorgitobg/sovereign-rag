@@ -233,7 +233,11 @@ def test_salary_question_with_mixed_passage_citing_salary_sentence_is_answered()
 
 # --- bounded fix round 2 (RED first) ---
 
-from sovereign_rag.application.answer import _attribute  # noqa: E402  # pyright: ignore[reportPrivateUsage]
+from sovereign_rag.application.answer import (  # noqa: E402
+    _attribute,  # pyright: ignore[reportPrivateUsage]
+    _has_evidence,  # pyright: ignore[reportPrivateUsage]
+    stems,
+)
 
 
 def test_sueldo_is_recognized_as_salary_intent() -> None:
@@ -391,11 +395,6 @@ def test_salary_question_with_complemento_is_still_answered() -> None:
 
 
 def test_complementos_plural_counts_as_pay_evidence() -> None:
-    from sovereign_rag.application.answer import (  # pyright: ignore[reportPrivateUsage]
-        _has_evidence,
-        stems,
-    )
-
     claim = "Los complementos retributivos se fijan por convenio."
     assert _has_evidence("salary", claim, stems(claim))
     non_pay = "Formación complementaria y jornada completa."
