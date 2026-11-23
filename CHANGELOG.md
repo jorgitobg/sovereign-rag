@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- `sovereign-rag-eval --json`: versioned (schema 1) per-question diagnostics with dataset identity (file name, SHA-256), retrieved documents, abstention reason, citation counts and failure reasons. The default text report and its denominators are unchanged.
+
 ## 0.1.0
 
 Changes since v0.0.1 (2 commits on main; see `git log v0.0.1..v0.1.0`).

@@ -68,6 +68,8 @@ abstention (out-of-corpus): 14/14 = 100.0%
 failed cases: p02, p07, p08, p09, p14, p16, p17, p18, p19, p25
 ```
 
+Per-question diagnostics: `python -m sovereign_rag.eval --json` prints the same run as versioned JSON (`schema_version` 1): dataset identity (file name, SHA-256, case and document counts), the aggregate counts above, and one row per question with the retrieved document ids, hit@k flags, abstention reason, answer text, citation counts, and `failure_reasons`. On the committed set the 10 failed cases split into 6 `answer_missing_expected_text` (p02, p07, p08, p09, p16, p19) and 4 `abstained_on_answerable` with reason `no_evidence` (p14, p17, p18, p25). The text report is unchanged, and `--golden` works the same way for the paraphrase set. Nothing is rescored: both outputs come from one run.
+
 How to read it:
 - **hit@k**: a gold document appears in the top-k retrieved chunks. 100% on 11 documents is an easy setting; it says little about larger corpora.
 - **answer contains expected text**: the returned sentence contains a hand-chosen substring. 61.5% is the honest figure for a sentence-extracting model; failures are mostly the model picking a boilerplate or title sentence, or questions needing a paraphrase.
