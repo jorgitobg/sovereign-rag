@@ -71,7 +71,18 @@ def test_per_case_rows_reproduce_every_aggregate() -> None:
     assert len(rows) == 40
     answerable = [r for r in rows if r["answerable"]]
     summary = doc["summary"]
-    assert sum(r["hit_at"]["5"] for r in answerable) == summary["hit_at"]["5"]
+    assert len(answerable) == summary["n_answerable"]
+    assert len(rows) - len(answerable) == summary["n_unanswerable"]
+    for k in ("1", "3", "5"):
+        assert sum(r["hit_at"][k] for r in answerable) == summary["hit_at"][k]
+    assert (
+        sum(r["citations"]["all_gold_doc"] is True for r in answerable)
+        == summary["citation_doc_correct"]
+    )
+    assert (
+        sum(r["abstained"] for r in rows if not r["answerable"])
+        == summary["abstained_unanswerable"]
+    )
     assert sum(1 for r in answerable if not r["abstained"]) == summary["answered"]
     assert sum(r["answer_contains"] is True for r in answerable) == summary["answer_contains"]
     assert sum(r["citations"]["total"] for r in rows) == summary["citations_total"]
