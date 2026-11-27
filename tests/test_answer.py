@@ -1,6 +1,8 @@
 from collections.abc import Sequence
 from datetime import date
 
+import pytest
+
 from sovereign_rag.application.answer import ABSTENTION_TEXT, answer_question
 from sovereign_rag.domain.models import Answer, Chunk, Hit
 from sovereign_rag.domain.ports import ModelClient, Retriever
@@ -197,6 +199,78 @@ def test_deadline_question_citing_the_deadline_sentence_is_answered() -> None:
         ScriptedModel("El plazo de presentación de solicitudes será de diez días hábiles. [1]"),
     )
     assert not ans.abstained and ans.reason == ""
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "¿Hasta cuándo se pueden presentar solicitudes en la convocatoria de Borriana?",
+        "¿Cuál es la fecha límite de presentación de solicitudes en la convocatoria de Borriana?",
+        "¿Cuál es el último día para presentar solicitudes en la convocatoria de Borriana?",
+        "¿Hasta qué día se admiten solicitudes en la convocatoria de Borriana?",
+    ],
+)
+class TestDeadlinePhrasingsWithoutPlazo:
+    """Deadline asked without the word ``plazo``: same evidence rule as DEADLINE_Q."""
+
+    PASSAGE = chunk(
+        13,
+        "Ayuntamiento de Borriana",
+        "Se convocan nueve plazas de Agente de la policía local, turno libre. "
+        "Las solicitudes se pueden presentar y se admiten hasta el último día de la "
+        "convocatoria, fecha límite de presentación indicada en el anuncio, durante diez días "
+        "hábiles.",
+    )
+
+    def test_count_sentence_cited_abstains(self, question: str) -> None:
+        ans = answer_question(
+            question,
+            FakeRetriever([self.PASSAGE]),
+            ScriptedModel(
+                "Se convocan nueve plazas de Agente de la policía local, turno libre. [1]"
+            ),
+        )
+        assert ans.abstained and ans.reason == "missing_requested_attribute"
+
+    def test_deadline_sentence_cited_is_answered(self, question: str) -> None:
+        reply = "Las solicitudes se presentan durante diez días hábiles. [1]"
+        ans = answer_question(question, FakeRetriever([self.PASSAGE]), ScriptedModel(reply))
+        assert not ans.abstained and ans.reason == ""
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "¿Hasta cuándo se pueden presentar solicitudes en la convocatoria de Borriana?",
+        "¿Cuál es la fecha límite de presentación de solicitudes en la convocatoria de Borriana?",
+        "¿Cuál es el último día para presentar solicitudes en la convocatoria de Borriana?",
+    ],
+)
+def test_phrasing_body_without_deadline_evidence_abstains_before_the_model(question: str) -> None:
+    body = chunk(
+        14,
+        "Ayuntamiento de Borriana",
+        "Las solicitudes de la convocatoria de Borriana se pueden presentar por vía electrónica; "
+        "la fecha límite y el último trámite de presentación constan en la sede.",
+    )
+    model = ScriptedModel("Las solicitudes se presentan por vía electrónica. [1]")
+    ans = answer_question(question, FakeRetriever([body]), model)
+    assert ans.abstained and ans.reason == "missing_requested_attribute"
+    assert model.calls == []
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "¿Cuál es el último puesto de la lista en la convocatoria de Borriana?",
+        "¿Cuántas plazas hay hasta completar la convocatoria de Borriana?",
+    ],
+)
+def test_phrase_fragments_alone_do_not_trigger_the_deadline_rule(question: str) -> None:
+    """``ultimo``/``hasta`` alone are not deadline intent; only the whole phrases are."""
+    from sovereign_rag.application.answer import _attribute
+
+    assert _attribute(question) != "deadline"
 
 
 def test_count_question_with_both_facts_citing_the_salary_sentence_abstains() -> None:

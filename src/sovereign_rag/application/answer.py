@@ -129,6 +129,11 @@ _SALARY_EVIDENCE = frozenset({"sueldo", "salari", "retrib", "remune"})
 # `completo`, `complementaria`...; match the whole word on the folded text instead.
 _PAY_COMPONENT = re.compile(r"\bcomplementos?\b")
 _DEADLINE_INTENT = frozenset({"plazo"})
+# Deadline questions that never say `plazo`/`tiempo`. A finite list of whole phrases matched on
+# the folded question; single words (`hasta`, `ultimo`, `fecha`) alone are not intent.
+_DEADLINE_PHRASES = re.compile(
+    r"\b(?:hasta cuando|hasta que (?:dia|fecha)|fecha (?:limite|maxima)|ultimo dia)\b"
+)
 _DEADLINE_EVIDENCE = frozenset({"plazo", "dia", "mes", "habil", "habile", "natura", "naturale"})
 _COUNT_NOUNS = frozenset({"plaza", "puesto", "vacant"})
 _CARDINALS = frozenset(
@@ -155,7 +160,7 @@ def _attribute(question: str) -> str:
     q = stems(question)
     if q & _SALARY_INTENT:
         return "salary"
-    if q & _DEADLINE_INTENT:
+    if q & _DEADLINE_INTENT or _DEADLINE_PHRASES.search(fold(question)):
         return "deadline"
     if "cuant" in fold(question) and q & _COUNT_NOUNS:
         return "quantity"

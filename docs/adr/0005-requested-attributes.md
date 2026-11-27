@@ -90,8 +90,13 @@ Known retained failures (`p02, p07, p08, p09, p14, p16, p17, p18, p19, p25` orig
   not caught. Citations still prove provenance, not truth.
 - The evidence check is answer-level (one evidenced claim suffices); a multi-claim answer
   mixing an evidenced and an unevidenced claim about the same attribute is accepted.
-- Intent detection is heuristic; a genuine deadline question phrased without `plazo`/`tiempo`
-  (e.g. "¿Hasta cuándo…?") is not covered.
+- Intent detection is heuristic. Deadline intent is `plazo`/`tiempo` plus six whole phrases
+  matched on the folded question (`hasta cuándo`, `hasta qué día`, `hasta qué fecha`,
+  `fecha límite`, `fecha máxima`, `último día`); other phrasings (e.g. "¿Cuándo termina…?",
+  "¿Hasta el…?", "¿Cuándo finaliza la presentación?") are still not covered and get no
+  attribute check. Widening was measured on both eval sets: per-question JSON is
+  byte-identical before and after, i.e. no committed question uses these phrasings, so the
+  guarantee rests on the unit tests, not on eval metrics.
 - Semantic entailment on the passage body remains out of scope: the prefilter is a finite
   word/amount check, not an entailment test. Evaluation metrics are unchanged by round 2
   (original 22/26 answered, 16/26 expected-text, 14/14 abstention; paraphrase 12/12
