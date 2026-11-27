@@ -263,14 +263,20 @@ def test_phrasing_body_without_deadline_evidence_abstains_before_the_model(quest
     "question",
     [
         "¿Cuál es el último puesto de la lista en la convocatoria de Borriana?",
-        "¿Cuántas plazas hay hasta completar la convocatoria de Borriana?",
+        "¿Qué se hace hasta completar la convocatoria de Borriana?",
     ],
 )
 def test_phrase_fragments_alone_do_not_trigger_the_deadline_rule(question: str) -> None:
     """``ultimo``/``hasta`` alone are not deadline intent; only the whole phrases are."""
-    from sovereign_rag.application.answer import _attribute
-
-    assert _attribute(question) != "deadline"
+    passage = chunk(
+        15,
+        "Ayuntamiento de Borriana",
+        "El último puesto de la lista de la convocatoria de Borriana es de Agente. "
+        "Se hace una revisión hasta completar la convocatoria de Borriana.",
+    )
+    reply = "El último puesto de la lista de la convocatoria de Borriana es de Agente. [1]"
+    ans = answer_question(question, FakeRetriever([passage]), ScriptedModel(reply))
+    assert not ans.abstained and ans.reason == ""
 
 
 def test_count_question_with_both_facts_citing_the_salary_sentence_abstains() -> None:
