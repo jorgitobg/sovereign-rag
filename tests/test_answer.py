@@ -504,6 +504,8 @@ def test_deadline_evidence_ignores_words_sharing_a_stem_with_period_terms(claim:
         "El plazo es de diez días hábiles.",
         "Se dispone de 20 días naturales.",
         "Plazo de 30 hábiles desde la publicación.",
+        "Se dispone de diez hábiles desde la publicación.",
+        "Se dispone de cinco naturales desde el anuncio.",
         "Presentación en el plazo de un mes.",
     ],
 )

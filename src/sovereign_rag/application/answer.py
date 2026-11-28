@@ -138,7 +138,6 @@ _DEADLINE_EVIDENCE = frozenset({"plazo", "dia", "mes"})
 # `habil`/`natura` were 6-letter prefixes that also matched `hábil` (skilled), `naturaleza`,
 # `naturalización`, `recursos naturales`...; a working/calendar-day count is matched as a whole
 # word after a number instead (`dia(s) habiles/naturales` already counts via the `dia` stem).
-_DEADLINE_PERIOD = re.compile(r"\b\d+\s+(?:habiles|naturales)\b")
 _COUNT_NOUNS = frozenset({"plaza", "puesto", "vacant"})
 _CARDINALS = frozenset(
     {
@@ -149,6 +148,9 @@ _CARDINALS = frozenset(
         "sesenta", "setenta", "ochenta", "noventa", "cien",
     }
 )  # fmt: skip
+_DEADLINE_PERIOD = re.compile(
+    r"\b(?:\d+|" + "|".join(sorted(_CARDINALS)) + r")\s+(?:habiles|naturales)\b"
+)
 _MONEY = re.compile(r"\d[\d.,]*\s*(?:euros|€)|€\s*\d[\d.,]*", re.IGNORECASE)
 
 

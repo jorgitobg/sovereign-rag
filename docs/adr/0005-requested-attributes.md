@@ -88,7 +88,7 @@ Known retained failures (`p02, p07, p08, p09, p14, p16, p17, p18, p19, p25` orig
   fixed (regression tests in `tests/test_answer.py`). Stem-marker audit (SR07): the deadline
   markers `habil`/`natura` (and the unreachable 8-letter `naturale`) matched `hábil` (skilled),
   `naturaleza`, `naturalización` and `recursos naturales`; they were removed and replaced by the
-  whole-word pattern `<number> habiles|naturales`; `dia(s) habiles/naturales` still counts via the
+  whole-word pattern `<digits or spelled cardinal> habiles|naturales`; `dia(s) habiles/naturales` still counts via the
   `dia` stem. Audited and kept: `sueldo`, `salari`, `retrib`, `remune`, `cobra`, `plazo`, `plaza`,
   `puesto`, `vacant`, `dia`, `mes` (no non-target Spanish word collision found; `habilitar`
   stems to `habili`). Not exhaustive: the check used hand-written synthetic sentences.
