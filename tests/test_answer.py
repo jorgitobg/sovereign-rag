@@ -479,3 +479,33 @@ def test_complementos_plural_counts_as_pay_evidence() -> None:
     assert _has_evidence("salary", claim, stems(claim))
     non_pay = "Formación complementaria y jornada completa."
     assert not _has_evidence("salary", non_pay, stems(non_pay))
+
+
+# --- SR07: deadline stem markers `natura` / `habil` must not match non-period words ---
+
+
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "La naturaleza del puesto es técnica.",
+        "La naturalización requiere un trámite previo.",
+        "Se valoran los recursos naturales de la zona.",
+        "Se requiere una persona hábil con herramientas.",
+        "Se habilitan nuevas aulas.",
+    ],
+)
+def test_deadline_evidence_ignores_words_sharing_a_stem_with_period_terms(claim: str) -> None:
+    assert not _has_evidence("deadline", claim, stems(claim))
+
+
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "El plazo es de diez días hábiles.",
+        "Se dispone de 20 días naturales.",
+        "Plazo de 30 hábiles desde la publicación.",
+        "Presentación en el plazo de un mes.",
+    ],
+)
+def test_deadline_evidence_still_accepts_period_phrases(claim: str) -> None:
+    assert _has_evidence("deadline", claim, stems(claim))

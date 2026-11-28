@@ -109,7 +109,7 @@ What is still wrong, kept visible on purpose:
 - Lexical retrieval only; no stemming beyond a crude prefix match, a four-group hand-written synonym table (see below), no embeddings in use.
 - The extractive model quotes sentences; it does not answer in its own words and can return a sentence that is on topic but does not contain the specific fact asked for.
 - Support checking is word overlap, so it catches fabricated or misattributed citations but not subtle meaning errors. Citations prove *where* text came from, not that the answer is right.
-- Requested-attribute checks are finite lexical guards, not entailment checks. Prefix collisions remain possible for the other 6-letter stem markers; the former `comple` collision (`complemento` vs non-pay `completa`) is fixed by whole-word matching. Deadline intent covers `plazo`/`tiempo` and a short list of phrases (`hasta cuándo`, `fecha límite`, `último día`, …); other deadline phrasings are not detected. See ADR 0005 for other retained failure modes.
+- Requested-attribute checks are finite lexical guards, not entailment checks. The former `comple` (`complemento` vs `completa`) and `habil`/`natura` (`hábil`, `naturaleza`, `recursos naturales`) prefix collisions are fixed by whole-word matching; the remaining markers were audited against synthetic sentences and no collision was found, but the audit is not exhaustive. Deadline intent covers `plazo`/`tiempo` and a short list of phrases (`hasta cuándo`, `fecha límite`, `último día`, …); other deadline phrasings are not detected. See ADR 0005 for other retained failure modes.
 - Not legal advice. BOE texts are reused under the BOE reuse licence; see `tests/fixtures/boe/SOURCES.md`.
 
 ## Layout
