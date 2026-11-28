@@ -134,7 +134,10 @@ _DEADLINE_INTENT = frozenset({"plazo"})
 _DEADLINE_PHRASES = re.compile(
     r"\b(?:hasta cuando|hasta que (?:dia|fecha)|fecha (?:limite|maxima)|ultimo dia)\b"
 )
-_DEADLINE_EVIDENCE = frozenset({"plazo", "dia", "mes", "habil", "habile", "natura", "naturale"})
+_DEADLINE_EVIDENCE = frozenset({"plazo", "dia", "mes"})
+# `habil`/`natura` were 6-letter prefixes that also matched `hábil` (skilled), `naturaleza`,
+# `naturalización`, `recursos naturales`...; a working/calendar-day count is matched as a whole
+# word after a number instead (`dia(s) habiles/naturales` already counts via the `dia` stem).
 _COUNT_NOUNS = frozenset({"plaza", "puesto", "vacant"})
 _CARDINALS = frozenset(
     {
@@ -145,6 +148,9 @@ _CARDINALS = frozenset(
         "sesenta", "setenta", "ochenta", "noventa", "cien",
     }
 )  # fmt: skip
+_DEADLINE_PERIOD = re.compile(
+    r"\b(?:\d+|" + "|".join(sorted(_CARDINALS)) + r")\s+(?:habiles|naturales)\b"
+)
 _MONEY = re.compile(r"\d[\d.,]*\s*(?:euros|€)|€\s*\d[\d.,]*", re.IGNORECASE)
 
 
@@ -175,7 +181,7 @@ def _has_evidence(attribute: str, claim: str, claim_stems: set[str]) -> bool:
             or bool(_MONEY.search(claim))
         )
     if attribute == "deadline":
-        return bool(claim_stems & _DEADLINE_EVIDENCE)
+        return bool(claim_stems & _DEADLINE_EVIDENCE) or bool(_DEADLINE_PERIOD.search(fold(claim)))
     if attribute == "quantity":
         # Cardinal words are matched on the raw tokens so retrieval stopwords ("un",
         # "una") cannot erase them; only digits *inside a monetary amount*

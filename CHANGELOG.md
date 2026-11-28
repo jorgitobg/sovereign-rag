@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Fixed
+- Deadline evidence no longer accepts `hábil`, `naturaleza`, `naturalización` or `recursos naturales` as a period term (6-letter prefix collisions `habil`/`natura`); `10 días hábiles/naturales` and `<number> hábiles/naturales` still match. Eval outputs unchanged.
+
 ### Added
 - `sovereign-rag-eval --json`: versioned (schema 1) per-question diagnostics with dataset identity (file name, SHA-256), retrieved documents, abstention reason, citation counts and failure reasons. The default text report and its denominators are unchanged.
 

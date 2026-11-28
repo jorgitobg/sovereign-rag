@@ -85,7 +85,13 @@ Known retained failures (`p02, p07, p08, p09, p14, p16, p17, p18, p19, p25` orig
   passage bodies contain the selected attribute's markers; it does not prove a fact exists.
 - The pay-evidence word `complemento(s)` is matched as a whole word on folded text. It used to be a
   6-letter prefix (`comple`) that also matched non-pay words such as `completa`; that collision is
-  fixed (regression tests in `tests/test_answer.py`). Other stem markers are still prefixes.
+  fixed (regression tests in `tests/test_answer.py`). Stem-marker audit (SR07): the deadline
+  markers `habil`/`natura` (and the unreachable 8-letter `naturale`) matched `hábil` (skilled),
+  `naturaleza`, `naturalización` and `recursos naturales`; they were removed and replaced by the
+  whole-word pattern `<digits or spelled cardinal> habiles|naturales`; `dia(s) habiles/naturales` still counts via the
+  `dia` stem. Audited and kept: `sueldo`, `salari`, `retrib`, `remune`, `cobra`, `plazo`, `plaza`,
+  `puesto`, `vacant`, `dia`, `mes` (no non-target Spanish word collision found; `habilitar`
+  stems to `habili`). Not exhaustive: the check used hand-written synthetic sentences.
 - Semantic entailment is out of scope: negation, paraphrase and numeric reasoning errors are
   not caught. Citations still prove provenance, not truth.
 - The evidence check is answer-level (one evidenced claim suffices); a multi-claim answer
